@@ -31,7 +31,9 @@
     animation: fadeIn .9s ease both;
   }
   .panel.hidden { display: none; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  /* opacity only: a transform animation would make this box the containing
+     block for the fixed-position "No", sending it outside the screen */
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   h1 {
     margin: 24px 0 0;
@@ -162,10 +164,13 @@
       no.style.left = r.left + 'px';
       no.style.top = r.top + 'px';
       slot.classList.add('ghost');
+      document.body.appendChild(no);        // lift it out of the panel so it is positioned against the screen
       void no.offsetWidth;                  // flush so the first hop animates
     }
 
-    var maxX = window.innerWidth - w - 12, maxY = window.innerHeight - h - 12;
+    var vw = Math.min(window.innerWidth, document.documentElement.clientWidth || window.innerWidth);
+    var vh = Math.min(window.innerHeight, document.documentElement.clientHeight || window.innerHeight);
+    var maxX = vw - w - 12, maxY = vh - h - 12;
     var x, y, tries = 0;
     do {
       x = 12 + Math.random() * Math.max(0, maxX - 12);
