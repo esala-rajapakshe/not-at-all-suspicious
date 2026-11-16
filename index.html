@@ -3,98 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Will you go on a date with me? 💕</title>
+<meta name="theme-color" content="#F5EDEF">
+<title>Will you go on a date with me?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; height: 100%; overflow: hidden; touch-action: none;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(160deg, #ffd1e3 0%, #ff9ec4 45%, #ff7eb3 100%);
-    color: #7a1f4b;
+    background: #F5EDEF; color: #3B2A31;
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   }
 
-  /* floating background hearts */
-  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
-  .hearts span {
-    position: absolute; bottom: -60px; opacity: 0;
-    animation: floatUp linear infinite;
-  }
-  @keyframes floatUp {
-    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-    10%  { opacity: .75; }
-    90%  { opacity: .75; }
-    100% { transform: translateY(-115vh) translateX(40px) rotate(25deg); opacity: 0; }
+  /* quiet background hearts */
+  .deco { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+  .deco svg { position: absolute; fill: none; stroke: #A94766; stroke-width: 1.5; stroke-linejoin: round; animation: drift 14s ease-in-out infinite; }
+  @keyframes drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
   }
 
-  .stage {
-    position: relative; z-index: 1; height: 100%;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
+  .stage { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 32px; }
+  .panel {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    width: 100%; max-width: 440px;
+    animation: fadeIn .9s ease both;
   }
-  .card {
-    width: min(92vw, 520px); text-align: center;
-    padding: 36px 24px 32px; border-radius: 28px;
-    background: rgba(255, 255, 255, .72);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 20px 50px rgba(190, 40, 110, .35), inset 0 0 0 2px rgba(255,255,255,.8);
-  }
-  .hidden { display: none; }
-
-  .emoji { font-size: 4rem; display: inline-block; animation: beat 1.2s ease-in-out infinite; }
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    15% { transform: scale(1.18); }
-    30% { transform: scale(1); }
-    45% { transform: scale(1.12); }
-  }
+  .panel.hidden { display: none; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
   h1 {
-    font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", "Lucida Handwriting", cursive;
-    font-size: clamp(2.2rem, 9vw, 3.4rem); line-height: 1.1; margin: 10px 0 28px;
-    color: #c2185b; text-shadow: 0 2px 0 #fff;
+    margin: 24px 0 0;
+    font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 300;
+    font-size: clamp(2.4rem, 9vw, 3.4rem); line-height: 1.15; color: #3B2A31;
   }
+  .sub { margin: 14px 0 0; font-size: 1rem; line-height: 1.5; color: #6B5A61; }
 
-  .buttons { display: flex; gap: 22px; justify-content: center; align-items: center; min-height: 80px; }
+  .buttons { display: flex; gap: 12px; width: 100%; margin-top: 36px; align-items: center; }
   button {
-    font: inherit; font-size: 1.25rem; font-weight: 700; border: none; border-radius: 999px;
-    padding: 14px 34px; cursor: pointer; user-select: none; -webkit-user-select: none;
+    font: inherit; font-size: 1.0625rem; height: 56px; border-radius: 999px; cursor: pointer;
+    user-select: none; -webkit-user-select: none;
   }
+  button:focus-visible { outline: 3px solid #3B2A31; outline-offset: 3px; }
   #yes {
-    color: #fff; background: linear-gradient(135deg, #ff4d8d, #e91e63);
-    box-shadow: 0 8px 20px rgba(233, 30, 99, .5);
-    transition: transform .2s ease; animation: pulse 1.6s ease-in-out infinite;
+    flex: 1.4; border: 0; background: #A94766; color: #fff; font-weight: 600;
+    transition: transform .35s ease, background .2s ease;
   }
-  @keyframes pulse { 0%,100% { box-shadow: 0 8px 20px rgba(233,30,99,.5); } 50% { box-shadow: 0 8px 34px rgba(233,30,99,.85); } }
-  #no { color: #8b4a6b; background: #fff; box-shadow: 0 6px 14px rgba(120, 40, 80, .25); }
-  #no.runaway { position: fixed; transition: left .15s ease-out, top .15s ease-out; z-index: 20; }
+  #yes:hover { background: #983D5A; }
+  .slot { flex: 1; height: 56px; border-radius: 999px; border: 1px solid transparent; transition: border-color .4s ease; }
+  .slot.ghost { border: 1px dashed #D9C6CC; }
+  #no {
+    width: 100%; border: 1px solid #D9C6CC; background: transparent; color: #6B5A61; font-weight: 500;
+  }
+  #no.runaway { position: fixed; z-index: 20; background: #F5EDEF; transition: left .45s cubic-bezier(.2,.8,.2,1), top .45s cubic-bezier(.2,.8,.2,1); }
 
-  #msg { margin: 26px 0 0; min-height: 1.6em; font-size: 1.15rem; font-weight: 600; color: #a3225f; }
+  #msg { min-height: 22px; margin: 18px 0 0; font-size: .9375rem; font-style: italic; color: #A94766; transition: opacity .3s ease; }
 
-  #win p { font-size: 1.2rem; margin: 0; }
-  .burst { position: fixed; left: 50%; top: 50%; font-size: 1.8rem; z-index: 30; pointer-events: none; }
+  .badge {
+    width: 80px; height: 80px; border-radius: 999px; background: #EBD6DD;
+    display: flex; align-items: center; justify-content: center;
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .emoji, #yes, .hearts span { animation: none; }
+    .deco svg, .panel { animation: none; }
+    #yes, #no.runaway, .slot { transition: none; }
   }
 </style>
 </head>
 <body>
-<div class="hearts" id="hearts"></div>
+
+<div class="deco" aria-hidden="true" id="deco"></div>
 
 <div class="stage">
-  <main class="card" id="ask">
-    <div class="emoji">💘</div>
+  <main class="panel" id="ask">
+    <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A94766" stroke-width="1.25" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.8 3.7 4.5 7 4.5c2 0 3.4 1 5 3 1.6-2 3-3 5-3 3.3 0 5.4 3.3 4.2 6.6C19.5 15.9 12 20.5 12 20.5z"/></svg>
     <h1>Will you go on a date with me?</h1>
+    <p class="sub">No pressure. Truly.</p>
     <div class="buttons">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No</button>
+      <button type="button" id="yes">Yes</button>
+      <div class="slot" id="slot"><button type="button" id="no">No</button></div>
     </div>
-    <p id="msg"></p>
+    <p id="msg" aria-live="polite"></p>
   </main>
 
-  <main class="card hidden" id="win">
-    <div class="emoji">🥰</div>
-    <h1>Yay! It's a date!</h1>
-    <p>You just made my whole day 💕</p>
+  <main class="panel hidden" id="win" aria-live="polite">
+    <div class="badge">
+      <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="#A94766" stroke="#A94766" stroke-width="1.25" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.8 3.7 4.5 7 4.5c2 0 3.4 1 5 3 1.6-2 3-3 5-3 3.3 0 5.4 3.3 4.2 6.6C19.5 15.9 12 20.5 12 20.5z"/></svg>
+    </div>
+    <h1 style="margin-top: 28px; font-size: clamp(2.6rem, 10vw, 3.6rem)">It's a date.</h1>
+    <p class="sub">Thanks for saying yes.</p>
   </main>
 </div>
 
@@ -102,89 +100,95 @@
 (function () {
   var yes = document.getElementById('yes');
   var no = document.getElementById('no');
+  var slot = document.getElementById('slot');
   var msg = document.getElementById('msg');
   var ask = document.getElementById('ask');
   var win = document.getElementById('win');
 
-  /* ---------- floating hearts background ---------- */
-  var layer = document.getElementById('hearts');
-  var glyphs = ['💖', '💕', '💗', '💓', '💘', '❤️', '🌸'];
-  for (var i = 0; i < 22; i++) {
-    var s = document.createElement('span');
-    s.textContent = glyphs[i % glyphs.length];
-    s.style.left = Math.random() * 100 + '%';
-    s.style.fontSize = (16 + Math.random() * 26) + 'px';
-    s.style.animationDuration = (9 + Math.random() * 10) + 's';
-    s.style.animationDelay = (-Math.random() * 18) + 's';
-    layer.appendChild(s);
-  }
+  /* ---------- faint background hearts ---------- */
+  var deco = document.getElementById('deco');
+  var path = 'M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.8 3.7 4.5 7 4.5c2 0 3.4 1 5 3 1.6-2 3-3 5-3 3.3 0 5.4 3.3 4.2 6.6C19.5 15.9 12 20.5 12 20.5z';
+  [
+    { l: '8%',  t: '14%', s: 22, o: .22, d: 0 },
+    { l: '86%', t: '20%', s: 16, o: .18, d: -4 },
+    { l: '14%', t: '78%', s: 28, o: .16, d: -8 },
+    { l: '80%', t: '72%', s: 18, o: .20, d: -2 },
+    { l: '50%', t: '8%',  s: 14, o: .14, d: -6 },
+    { l: '66%', t: '90%', s: 20, o: .14, d: -10 }
+  ].forEach(function (h) {
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', h.s);
+    svg.setAttribute('height', h.s);
+    svg.style.left = h.l; svg.style.top = h.t; svg.style.opacity = h.o;
+    svg.style.animationDelay = h.d + 's';
+    var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', path);
+    svg.appendChild(p);
+    deco.appendChild(svg);
+  });
 
-  /* ---------- the runaway "No" ---------- */
-  var taunts = [
-    "Are you sure? 🥺", "Pretty please? 💕", "Don't break my heart 💔",
-    "Try the other button 😉", "Nice try! 😏", "Just say yes 💖",
-    "It'll be fun, I promise 🌹", "Aw, come on 🥹"
+  /* ---------- the shy "No" ---------- */
+  var lines = [
+    'Are you sure?', 'Take your time.', 'Hmm, that one is shy.',
+    'Just checking.', 'The other one is friendlier.', 'Really?'
   ];
-  var lastTaunt = -1, lastSay = 0, yesScale = 1;
+  var lastLine = -1, lastSay = 0, scale = 1;
 
   function say() {
     var now = Date.now();
-    if (now - lastSay < 700) return;      // change text at most once per 0.7s
+    if (now - lastSay < 700) return;       // change text at most once per 0.7s
     lastSay = now;
     var i;
-    do { i = Math.floor(Math.random() * taunts.length); } while (i === lastTaunt);
-    lastTaunt = i;
-    msg.textContent = taunts[i];
+    do { i = Math.floor(Math.random() * lines.length); } while (i === lastLine);
+    lastLine = i;
+    msg.textContent = lines[i];
   }
 
   function overlaps(x, y, w, h, el) {
-    var r = el.getBoundingClientRect(), pad = 14;
+    var r = el.getBoundingClientRect(), pad = 16;
     return x < r.right + pad && x + w > r.left - pad &&
            y < r.bottom + pad && y + h > r.top - pad;
   }
 
-  var placeholder = null;
   function flee(px, py) {
     var w = no.offsetWidth, h = no.offsetHeight;
-    var maxX = window.innerWidth - w - 8, maxY = window.innerHeight - h - 8;
-    var x, y, tries = 0;
 
     if (!no.classList.contains('runaway')) {
       var r = no.getBoundingClientRect();
-      // keep the layout steady so "Yes" doesn't shift when "No" leaves
-      placeholder = document.createElement('div');
-      placeholder.style.width = r.width + 'px';
-      placeholder.style.height = r.height + 'px';
-      no.parentNode.insertBefore(placeholder, no);
+      w = r.width; h = r.height;
+      no.style.width = w + 'px';
       no.classList.add('runaway');
       no.style.left = r.left + 'px';
       no.style.top = r.top + 'px';
-      void no.offsetWidth;                 // flush so the first jump animates
+      slot.classList.add('ghost');
+      void no.offsetWidth;                  // flush so the first hop animates
     }
 
+    var maxX = window.innerWidth - w - 12, maxY = window.innerHeight - h - 12;
+    var x, y, tries = 0;
     do {
-      x = 8 + Math.random() * Math.max(0, maxX - 8);
-      y = 8 + Math.random() * Math.max(0, maxY - 8);
+      x = 12 + Math.random() * Math.max(0, maxX - 12);
+      y = 12 + Math.random() * Math.max(0, maxY - 12);
       tries++;
     } while (tries < 40 && (
       overlaps(x, y, w, h, yes) ||
-      (px != null && Math.hypot(x + w / 2 - px, y + h / 2 - py) < 160)
+      (px != null && Math.hypot(x + w / 2 - px, y + h / 2 - py) < 180)
     ));
 
     no.style.left = x + 'px';
     no.style.top = y + 'px';
 
-    // "Yes" grows a little each time, up to 1.5x
-    yesScale = Math.min(1.5, yesScale + 0.05);
-    yes.style.transform = 'scale(' + yesScale + ')';
+    scale = Math.min(1.2, scale + 0.03);    // "Yes" grows a touch each time
+    yes.style.transform = 'scale(' + scale + ')';
     say();
   }
 
-  // Desktop: dodge as the cursor gets close (at most once per 200ms)
+  // Desktop: hop away as the cursor nears (at most once per 250ms)
   var lastHover = 0;
   document.addEventListener('mousemove', function (e) {
     var now = Date.now();
-    if (now - lastHover < 200) return;
+    if (now - lastHover < 250) return;
     var r = no.getBoundingClientRect();
     var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     if (Math.hypot(e.clientX - cx, e.clientY - cy) < 100) {
@@ -193,8 +197,8 @@
     }
   });
 
-  // Touch / click: dodge the moment it is touched. One tap fires several
-  // events, so only react once per 400ms; the rest are still blocked.
+  // Touch / click: hop the moment it is touched. One tap fires several
+  // events, so react once per 400ms and still block the rest.
   var lastDodge = 0;
   function dodge(e) {
     e.preventDefault();
@@ -208,32 +212,20 @@
   ['touchstart', 'pointerdown', 'mousedown', 'click'].forEach(function (ev) {
     no.addEventListener(ev, dodge, { passive: false });
   });
-  no.addEventListener('keydown', function () { flee(); });
+  no.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flee(); }
+  });
 
   window.addEventListener('resize', function () {
     if (no.classList.contains('runaway')) flee();
   });
 
-  /* ---------- the "Yes" celebration ---------- */
-  function celebrate() {
+  /* ---------- Yes ---------- */
+  yes.addEventListener('click', function () {
     ask.classList.add('hidden');
-    no.classList.add('hidden');
+    no.style.display = 'none';
     win.classList.remove('hidden');
-    for (var i = 0; i < 46; i++) {
-      var b = document.createElement('span');
-      b.className = 'burst';
-      b.textContent = glyphs[i % glyphs.length];
-      document.body.appendChild(b);
-      var ang = Math.random() * Math.PI * 2;
-      var dist = 140 + Math.random() * Math.min(window.innerWidth, window.innerHeight) * 0.5;
-      b.animate([
-        { transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 },
-        { transform: 'translate(calc(-50% + ' + Math.cos(ang) * dist + 'px), calc(-50% + ' + Math.sin(ang) * dist + 'px)) scale(1.4)', opacity: 0 }
-      ], { duration: 1400 + Math.random() * 900, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' })
-        .onfinish = (function (el) { return function () { el.remove(); }; })(b);
-    }
-  }
-  yes.addEventListener('click', celebrate);
+  });
 })();
 </script>
 </body>
