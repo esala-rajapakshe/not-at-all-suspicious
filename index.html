@@ -3,40 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Are you smart?</title>
+<title>Will you go on a date with me? 💕</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
-    margin: 0; height: 100%; overflow: hidden;
+    margin: 0; height: 100%; overflow: hidden; touch-action: none;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(135deg, #1e1b4b, #4c1d95);
-    color: #fff; touch-action: none;
+    background: linear-gradient(160deg, #ffd1e3 0%, #ff9ec4 45%, #ff7eb3 100%);
+    color: #7a1f4b;
   }
+
+  /* floating background hearts */
+  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .hearts span {
+    position: absolute; bottom: -60px; opacity: 0;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: .75; }
+    90%  { opacity: .75; }
+    100% { transform: translateY(-115vh) translateX(40px) rotate(25deg); opacity: 0; }
+  }
+
   .stage {
-    height: 100%; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center; padding: 24px;
+    position: relative; z-index: 1; height: 100%;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
   }
-  h1 { font-size: clamp(2rem, 8vw, 3.5rem); margin: 0 0 32px; }
-  .buttons { display: flex; gap: 20px; }
+  .card {
+    width: min(92vw, 520px); text-align: center;
+    padding: 36px 24px 32px; border-radius: 28px;
+    background: rgba(255, 255, 255, .72);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 20px 50px rgba(190, 40, 110, .35), inset 0 0 0 2px rgba(255,255,255,.8);
+  }
+  .hidden { display: none; }
+
+  .emoji { font-size: 4rem; display: inline-block; animation: beat 1.2s ease-in-out infinite; }
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.18); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+  }
+
+  h1 {
+    font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", "Lucida Handwriting", cursive;
+    font-size: clamp(2.2rem, 9vw, 3.4rem); line-height: 1.1; margin: 10px 0 28px;
+    color: #c2185b; text-shadow: 0 2px 0 #fff;
+  }
+
+  .buttons { display: flex; gap: 22px; justify-content: center; align-items: center; min-height: 80px; }
   button {
-    font: inherit; font-size: 1.25rem; font-weight: 600;
-    padding: 14px 36px; border: none; border-radius: 12px; cursor: pointer;
-    color: #fff; user-select: none; -webkit-user-select: none;
+    font: inherit; font-size: 1.25rem; font-weight: 700; border: none; border-radius: 999px;
+    padding: 14px 34px; cursor: pointer; user-select: none; -webkit-user-select: none;
   }
-  #no  { background: #ef4444; }
-  #yes { background: #22c55e; }
-  #yes.runaway { position: fixed; transition: left .15s ease-out, top .15s ease-out; z-index: 10; }
-  #msg { margin-top: 32px; min-height: 2em; font-size: 1.25rem; opacity: .9; }
+  #yes {
+    color: #fff; background: linear-gradient(135deg, #ff4d8d, #e91e63);
+    box-shadow: 0 8px 20px rgba(233, 30, 99, .5);
+    transition: transform .2s ease; animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 8px 20px rgba(233,30,99,.5); } 50% { box-shadow: 0 8px 34px rgba(233,30,99,.85); } }
+  #no { color: #8b4a6b; background: #fff; box-shadow: 0 6px 14px rgba(120, 40, 80, .25); }
+  #no.runaway { position: fixed; transition: left .15s ease-out, top .15s ease-out; z-index: 20; }
+
+  #msg { margin: 26px 0 0; min-height: 1.6em; font-size: 1.15rem; font-weight: 600; color: #a3225f; }
+
+  #win p { font-size: 1.2rem; margin: 0; }
+  .burst { position: fixed; left: 50%; top: 50%; font-size: 1.8rem; z-index: 30; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .emoji, #yes, .hearts span { animation: none; }
+  }
 </style>
 </head>
 <body>
+<div class="hearts" id="hearts"></div>
+
 <div class="stage">
-  <h1>Are you smart?</h1>
-  <div class="buttons">
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
-  </div>
-  <div id="msg"></div>
+  <main class="card" id="ask">
+    <div class="emoji">💘</div>
+    <h1>Will you go on a date with me?</h1>
+    <div class="buttons">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No</button>
+    </div>
+    <p id="msg"></p>
+  </main>
+
+  <main class="card hidden" id="win">
+    <div class="emoji">🥰</div>
+    <h1>Yay! It's a date!</h1>
+    <p>You just made my whole day 💕</p>
+  </main>
 </div>
 
 <script>
@@ -44,15 +103,33 @@
   var yes = document.getElementById('yes');
   var no = document.getElementById('no');
   var msg = document.getElementById('msg');
-  var taunts = [
-    "Nice try.", "Too slow!", "Nope.", "Almost!", "Missed me.",
-    "Is that your best?", "Try harder.", "Not today."
-  ];
+  var ask = document.getElementById('ask');
+  var win = document.getElementById('win');
 
-  var lastTaunt = -1, lastSay = 0;
+  /* ---------- floating hearts background ---------- */
+  var layer = document.getElementById('hearts');
+  var glyphs = ['💖', '💕', '💗', '💓', '💘', '❤️', '🌸'];
+  for (var i = 0; i < 22; i++) {
+    var s = document.createElement('span');
+    s.textContent = glyphs[i % glyphs.length];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.fontSize = (16 + Math.random() * 26) + 'px';
+    s.style.animationDuration = (9 + Math.random() * 10) + 's';
+    s.style.animationDelay = (-Math.random() * 18) + 's';
+    layer.appendChild(s);
+  }
+
+  /* ---------- the runaway "No" ---------- */
+  var taunts = [
+    "Are you sure? 🥺", "Pretty please? 💕", "Don't break my heart 💔",
+    "Try the other button 😉", "Nice try! 😏", "Just say yes 💖",
+    "It'll be fun, I promise 🌹", "Aw, come on 🥹"
+  ];
+  var lastTaunt = -1, lastSay = 0, yesScale = 1;
+
   function say() {
     var now = Date.now();
-    if (now - lastSay < 700) return; // change text at most once per 0.7s
+    if (now - lastSay < 700) return;      // change text at most once per 0.7s
     lastSay = now;
     var i;
     do { i = Math.floor(Math.random() * taunts.length); } while (i === lastTaunt);
@@ -61,22 +138,28 @@
   }
 
   function overlaps(x, y, w, h, el) {
-    var r = el.getBoundingClientRect(), pad = 12;
+    var r = el.getBoundingClientRect(), pad = 14;
     return x < r.right + pad && x + w > r.left - pad &&
            y < r.bottom + pad && y + h > r.top - pad;
   }
 
-  function flee(px, py, withTaunt) {
-    var w = yes.offsetWidth, h = yes.offsetHeight;
+  var placeholder = null;
+  function flee(px, py) {
+    var w = no.offsetWidth, h = no.offsetHeight;
     var maxX = window.innerWidth - w - 8, maxY = window.innerHeight - h - 8;
     var x, y, tries = 0;
 
-    if (!yes.classList.contains('runaway')) {
-      var r = yes.getBoundingClientRect();
-      yes.classList.add('runaway');
-      yes.style.left = r.left + 'px';
-      yes.style.top = r.top + 'px';
-      void yes.offsetWidth; // flush so the first jump animates
+    if (!no.classList.contains('runaway')) {
+      var r = no.getBoundingClientRect();
+      // keep the layout steady so "Yes" doesn't shift when "No" leaves
+      placeholder = document.createElement('div');
+      placeholder.style.width = r.width + 'px';
+      placeholder.style.height = r.height + 'px';
+      no.parentNode.insertBefore(placeholder, no);
+      no.classList.add('runaway');
+      no.style.left = r.left + 'px';
+      no.style.top = r.top + 'px';
+      void no.offsetWidth;                 // flush so the first jump animates
     }
 
     do {
@@ -84,31 +167,34 @@
       y = 8 + Math.random() * Math.max(0, maxY - 8);
       tries++;
     } while (tries < 40 && (
-      overlaps(x, y, w, h, no) ||
+      overlaps(x, y, w, h, yes) ||
       (px != null && Math.hypot(x + w / 2 - px, y + h / 2 - py) < 160)
     ));
 
-    yes.style.left = x + 'px';
-    yes.style.top = y + 'px';
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+
+    // "Yes" grows a little each time, up to 1.5x
+    yesScale = Math.min(1.5, yesScale + 0.05);
+    yes.style.transform = 'scale(' + yesScale + ')';
     say();
   }
 
-  // Desktop: dodge as the cursor gets close.
+  // Desktop: dodge as the cursor gets close (at most once per 200ms)
   var lastHover = 0;
   document.addEventListener('mousemove', function (e) {
     var now = Date.now();
-    if (now - lastHover < 200) return; // let the last jump finish first
-    var r = yes.getBoundingClientRect();
+    if (now - lastHover < 200) return;
+    var r = no.getBoundingClientRect();
     var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    if (Math.hypot(e.clientX - cx, e.clientY - cy) < 110) {
+    if (Math.hypot(e.clientX - cx, e.clientY - cy) < 100) {
       lastHover = now;
-      flee(e.clientX, e.clientY, false);
+      flee(e.clientX, e.clientY);
     }
   });
 
-  // Mobile + any pointer: dodge the moment it is touched or clicked.
-  // One tap fires several events (touchstart, pointerdown, mousedown, click),
-  // so only react once per 400ms; the rest are still blocked.
+  // Touch / click: dodge the moment it is touched. One tap fires several
+  // events, so only react once per 400ms; the rest are still blocked.
   var lastDodge = 0;
   function dodge(e) {
     e.preventDefault();
@@ -117,21 +203,37 @@
     if (now - lastDodge < 400) return;
     lastDodge = now;
     var t = e.touches && e.touches[0];
-    flee(t ? t.clientX : e.clientX, t ? t.clientY : e.clientY, true);
+    flee(t ? t.clientX : e.clientX, t ? t.clientY : e.clientY);
   }
   ['touchstart', 'pointerdown', 'mousedown', 'click'].forEach(function (ev) {
-    yes.addEventListener(ev, dodge, { passive: false });
+    no.addEventListener(ev, dodge, { passive: false });
   });
-  yes.addEventListener('keydown', function (e) { flee(null, null, true); });
+  no.addEventListener('keydown', function () { flee(); });
 
-  // Keep it on screen if the window is resized or rotated.
   window.addEventListener('resize', function () {
-    if (yes.classList.contains('runaway')) flee();
+    if (no.classList.contains('runaway')) flee();
   });
 
-  no.addEventListener('click', function () {
-    msg.textContent = "Honest. Respect.";
-  });
+  /* ---------- the "Yes" celebration ---------- */
+  function celebrate() {
+    ask.classList.add('hidden');
+    no.classList.add('hidden');
+    win.classList.remove('hidden');
+    for (var i = 0; i < 46; i++) {
+      var b = document.createElement('span');
+      b.className = 'burst';
+      b.textContent = glyphs[i % glyphs.length];
+      document.body.appendChild(b);
+      var ang = Math.random() * Math.PI * 2;
+      var dist = 140 + Math.random() * Math.min(window.innerWidth, window.innerHeight) * 0.5;
+      b.animate([
+        { transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 },
+        { transform: 'translate(calc(-50% + ' + Math.cos(ang) * dist + 'px), calc(-50% + ' + Math.sin(ang) * dist + 'px)) scale(1.4)', opacity: 0 }
+      ], { duration: 1400 + Math.random() * 900, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' })
+        .onfinish = (function (el) { return function () { el.remove(); }; })(b);
+    }
+  }
+  yes.addEventListener('click', celebrate);
 })();
 </script>
 </body>
